@@ -2,6 +2,8 @@ import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 import seaborn as sns
+import polars as pl
+from tqdm import tqdm
 
 
 def create_network(
@@ -297,3 +299,65 @@ def update_attitudes(
     attitudes = np.where(attitudes < -1, -1, attitudes)
     attitudes = np.where(attitudes > 1, 1, attitudes)
     return attitudes
+
+
+def run_model(
+        tmax: int,
+        number_of_nodes: np.ndarray,
+        A_social: np.ndarray,
+        attitudes: np.ndarray,
+        reciprocate_interactions: bool = True
+    ) -> list[pl.DataFrame]:
+    """Runs the model"""
+    # Set up dataframe to track the attitudes over time
+    attitude_tracker = pl.DataFrame({
+        "time": np.repeat(0, repeats=number_of_nodes),
+        "node": np.arange(number_of_nodes),
+        "attitude": attitudes
+    })
+    sim_summary = pl.DataFrame({
+        "time": 0,
+        "edge_weight_mean": np.mean(A_social),
+        "edge_weight_median": np.median(A_social),
+        "edge_weight_sd": np.std(A_social),
+        "attitude_mean": np.mean(attitudes),
+        "attitude_median" : np.median(attitudes),
+        "attitude_sd": np.std(attitudes)
+    })
+    # Run the simulation
+    for t in tqdm(range(tmax)):
+        A_interaction = make_interactions(
+            A_social,
+            number_of_nodes,
+            reciprocate_interactions
+        )
+        A_social = update_edges(
+            A_social,
+            A_interaction,
+            attitudes,
+            method="type1"
+        )
+        attitudes = update_attitudes(
+            A_social,
+            A_interaction,
+            attitudes,
+            method="type1"
+        )
+        # Add new rows to track nodes over time
+        attitudes_t = pl.DataFrame({
+            "time": np.repeat(t, repeats=number_of_nodes),
+            "node": np.arange(number_of_nodes),
+            "attitude": attitudes
+        })
+        sim_summary_t = pl.DataFrame({
+            "time": t,
+            "edge_weight_mean": np.mean(A_social),
+            "edge_weight_median": np.median(A_social),
+            "edge_weight_sd": np.std(A_social),
+            "attitude_mean": np.mean(attitudes),
+            "attitude_median" : np.median(attitudes),
+            "attitude_sd": np.std(attitudes)
+        })
+        attitude_tracker = pl.concat([attitude_tracker, attitudes_t])
+        sim_summary = pl.concat([sim_summary, sim_summary_t])
+    return [attitude_tracker, sim_summary]
