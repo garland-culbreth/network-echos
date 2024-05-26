@@ -1,7 +1,5 @@
 import numpy as np
 import networkx as nx
-import matplotlib.pyplot as plt
-import seaborn as sns
 import polars as pl
 from tqdm import tqdm
 
@@ -36,7 +34,7 @@ def create_network(
     
     Returns
     -------
-    G_social : nx.Graph
+    g_social : nx.Graph
         A networkx graph object of the network.
 
     Raises
@@ -51,25 +49,26 @@ def create_network(
         "newman_watts_strogatz",
         "barabasi_albert"
     ]
-    assert network_type in supported_types, f"Parameter network_type must be one of {supported_types}"
+    assert network_type in supported_types, f"Parameter network_type must be \
+        one of {supported_types}"
     if network_type == "complete":
-        G_social = nx.complete_graph(n=number_of_nodes)
+        g_social = nx.complete_graph(n=number_of_nodes)
     if network_type == "gnp_random":
-        G_social = nx.gnp_random_graph(n=number_of_nodes, p=p)
+        g_social = nx.gnp_random_graph(n=number_of_nodes, p=p)
     if network_type == "watts_strogatz":
-        G_social = nx.watts_strogatz_graph(n=number_of_nodes, k=k, p=p)
+        g_social = nx.watts_strogatz_graph(n=number_of_nodes, k=k, p=p)
     if network_type == "newman_watts_strogatz":
-        G_social = nx.newman_watts_strogatz_graph(number_of_nodes, k=k, p=p)
+        g_social = nx.newman_watts_strogatz_graph(number_of_nodes, k=k, p=p)
     if network_type == "barabasi_albert":
-        G_social = nx.barabasi_albert_graph(n=number_of_nodes, m=m)
-    return G_social
+        g_social = nx.barabasi_albert_graph(n=number_of_nodes, m=m)
+    return g_social
 
 
 def initialize_attitudes(
         number_of_nodes: int,
         distribution: str = "normal",
         loc: float = 0.0,
-        scale: float = 0.1
+        scale: float = 1
     ) -> np.ndarray:
     """Generate and set the initial attitudes.
 
@@ -98,20 +97,19 @@ def initialize_attitudes(
         distributons.
     """
     supported_distibutions = ['normal']
-    assert distribution in supported_distibutions, f"Parameter 'distribution' must be one of {supported_distibutions}."
+    assert distribution in supported_distibutions, f"Parameter 'distribution' \
+        must be one of {supported_distibutions}."
     if distribution == "normal":
         rng = np.random.default_rng()
         attitudes = rng.normal(loc=loc, scale=scale, size=number_of_nodes)
-    # attitudes[attitudes > 1.0] = 1.0
-    # attitudes[attitudes < -1.0] = -1.0
-    attitudes = np.where(attitudes > 1.0, 1.0, attitudes)
-    attitudes = np.where(attitudes < -1.0, -1.0, attitudes)
+    attitudes = np.where(attitudes > np.pi/2, np.pi/2, attitudes)
+    attitudes = np.where(attitudes < -np.pi/2, -np.pi/2, attitudes)
     assert np.isfinite(attitudes).all(), "attitudes has NaNs."
     return attitudes
 
 
 def initialize_edges(
-        G_social: nx.Graph,
+        g_social: nx.Graph,
         neighbor_weight: float = 1.0,
         non_neighbor_weight: float = 0.0
     ) -> np.ndarray:
@@ -119,7 +117,7 @@ def initialize_edges(
 
     Parameters
     ----------
-    G_social : nx.Graph
+    g_social : nx.Graph
         The initial social network object whose edge are to
         be modified.
     neighbor_weight : float {optional, default: 1.0}
@@ -131,34 +129,35 @@ def initialize_edges(
 
     Returns
     -------
-    A_social : np.ndarray
+    a_social : np.ndarray
         The network's adjacency matrix as a 2-dimensional
         numpy array.
     """
-    A_social = nx.to_numpy_array(G_social)
-    A_social = neighbor_weight * A_social
-    A_social[A_social == 0] = non_neighbor_weight
-    assert np.isfinite(A_social).all(), "A_social has NaNs."
-    return A_social
+    a_social = nx.to_numpy_array(g_social)
+    a_social = neighbor_weight * a_social
+    a_social[a_social == 0] = non_neighbor_weight
+    assert np.isfinite(a_social).all(), "a_social has NaNs."
+    return a_social
 
 
 def make_interactions(
-        A_social: np.ndarray,
+        a_social: np.ndarray,
         number_of_nodes: int,
         reciprocate: bool = True
     ) -> np.ndarray:
-    assert np.isfinite(A_social).all(), "A_social has NaNs."
+    """Makes the random interactions at each time step"""
+    assert np.isfinite(a_social).all(), "a_social has NaNs."
     rng = np.random.default_rng()
-    A_interaction = rng.random(size=(number_of_nodes, number_of_nodes))
-    A_interaction = np.where(A_interaction <= A_social, 1, 0)
-    if reciprocate == True:
-        A_interaction = np.maximum(A_interaction, A_interaction.transpose())
-    return A_interaction
+    a_interaction = rng.random(size=(number_of_nodes, number_of_nodes))
+    a_interaction = np.where(a_interaction <= a_social, 1, 0)
+    if reciprocate:
+        a_interaction = np.maximum(a_interaction, a_interaction.transpose())
+    return a_interaction
 
 
 def update_edges(
-        A_social: np.ndarray,
-        A_interaction: np.ndarray,
+        a_social: np.ndarray,
+        a_interaction: np.ndarray,
         attitudes: np.ndarray,
         method: str = "type1"
     ) -> np.ndarray:
@@ -166,10 +165,10 @@ def update_edges(
 
     Parameters
     ----------
-    A_social : np.ndarray
+    a_social : np.ndarray
         Adjacency matrix of the social network. Used to
         weight attitude reinforcement.
-    A_interaction : np.ndarray
+    a_interaction : np.ndarray
         Interaction matrix. Should contain only 1s and
         0s, indicating which nodes interacted at a given
         time step.
@@ -182,7 +181,7 @@ def update_edges(
 
     Returns
     -------
-    A_social : np.ndarray
+    a_social : np.ndarray
         Updated adjacency matrix of the social network.
 
     Raises
@@ -190,42 +189,52 @@ def update_edges(
     AssertionError
         If `method` is not one of the supported_methods.
     AssertionError
-        If `A_social` contains any NaN values.
+        If `a_social` contains any NaN values.
     AssertionError
-        If `A_interaction` contains any NaN values.
+        If `a_interaction` contains any NaN values.
     AssertionError
         If `attitudes` contains any NaN values.
     """
-    supported_methods = ["type1", "type2", "type3"]
-    assert method in supported_methods, f"Parameter method must be one of {supported_methods}"
-    assert np.isfinite(A_social).all(), "A_social has NaNs."
-    assert np.isfinite(A_interaction).all(), "A_interaction has NaNs."
+    supported_methods = ["type1", "type2", "type3", "type4"]
+    assert method in supported_methods, f"Parameter method must be one of \
+        {supported_methods}"
+    assert np.isfinite(a_social).all(), "a_social has NaNs."
+    assert np.isfinite(a_interaction).all(), "a_interaction has NaNs."
     assert np.isfinite(attitudes).all(), "attitudes has NaNs."
-    for i in range(len(attitudes)):
-        for j in range(len(attitudes)):
+    for i, attitude_i in enumerate(attitudes):
+        for j, attitude_j in enumerate(attitudes):
             if i == j:
-                next
+                continue
             if method == "type1":
-                d_A_social = (A_interaction[i][j]
-                              * (np.abs(attitudes[i]) - np.abs(attitudes[j]))
-                              * np.sign(attitudes[i] * attitudes[j]))
+                # Consensus network with relaxing disturbances
+                d_a_social = (a_interaction[i][j]
+                            * (np.abs(attitude_i) - np.abs(attitude_j))
+                            * np.sin(attitude_i * attitude_j))
             if method == "type2":
-                d_A_social = (A_interaction[i][j]
-                              * (np.abs(attitudes[i]) - np.abs(attitudes[j]))
-                              * np.sign(attitudes[i] + attitudes[j]))
+                d_a_social = (a_interaction[i][j]
+                              * (np.abs(attitude_i) - np.abs(attitude_j))
+                              * np.sin(attitude_i + attitude_j))
             if method == "type3":
-                d_A_social = (A_interaction[i][j]
-                              * np.sqrt((attitudes[i] - attitudes[j])**2)
-                              * np.sign(attitudes[i] * attitudes[j]))
-            A_social[i][j] = A_social[i][j] + d_A_social
-    A_social = np.where(A_social < 1e-20, 1e-20, A_social)
-    A_social = np.where(A_social > 1, 1, A_social)
-    return A_social
+                d_a_social = (a_interaction[i][j]
+                              * np.sqrt((attitude_i - attitude_j)**2)
+                              * np.sin(attitude_i * attitude_j))
+            if method == "type4":
+                d_a_social = (a_interaction[i][j]
+                              * (np.abs(attitude_i - attitude_j)))
+            if method == "type5":
+                # Polarized network
+                d_a_social = (a_interaction[i][j]
+                              * (np.abs(attitude_i) - np.abs(attitude_j))
+                              * -np.sin(attitude_i * attitude_j))
+            a_social[i][j] = a_social[i][j] + d_a_social
+    a_social = np.where(a_social < 1e-20, 1e-20, a_social)
+    a_social = np.where(a_social > 1, 1, a_social)
+    return a_social
 
 
 def update_attitudes(
-        A_social: np.ndarray,
-        A_interaction: np.ndarray,
+        a_social: np.ndarray,
+        a_interaction: np.ndarray,
         attitudes: np.ndarray,
         method: str = "type1"
     ) -> np.ndarray:
@@ -233,10 +242,10 @@ def update_attitudes(
 
     Parameters
     ----------
-    A_social : np.ndarray
+    a_social : np.ndarray
         Adjacency matrix of the social network. Used to
         weight attitude reinforcement.
-    A_interaction : np.ndarray
+    a_interaction : np.ndarray
         Interaction matrix. Should contain only 1s and
         0s, indicating which nodes interacted at a given
         time step.
@@ -257,56 +266,68 @@ def update_attitudes(
     AssertionError
         If `method` is not one of the supported_methods.
     AssertionError
-        If `A_social` contains any NaN values.
+        If `a_social` contains any NaN values.
     AssertionError
-        If `A_interaction` contains any NaN values.
+        If `a_interaction` contains any NaN values.
     AssertionError
         If `attitudes` contains any NaN values.
 
     Note
     ----
-    Setting method to type1 or type3 is extremely
+    Setting `reinf_method_edges` to type4 and
+    `reinf_method_atittude` to type4 is extremely
     interesting. They appear to create a model that
     gravitates toward consensus but has periods of intense
     instability.
     """
-    supported_methods = ["type1", "type2", "type3", "type4"]
-    assert method in supported_methods, f"Parameter method must be one of {supported_methods}"
-    assert np.isfinite(A_social).all(), "A_social has NaNs."
-    assert np.isfinite(A_interaction).all(), "A_interaction has NaNs."
+    supported_methods = ["type1", "type2", "type3", "type4", "type5"]
+    assert method in supported_methods, f"Parameter method must be one of \
+        {supported_methods}"
+    assert np.isfinite(a_social).all(), "a_social has NaNs."
+    assert np.isfinite(a_interaction).all(), "a_interaction has NaNs."
     assert np.isfinite(attitudes).all(), "attitudes has NaNs."
-    for i in range(len(attitudes)):
-        for j in range(len(attitudes)):
+    for i, attitude_i in enumerate(attitudes):
+        for j, attitude_j in enumerate(attitudes):
             if i == j:
-                next
+                continue
             if method == "type1":
-                d_attitude = ((A_interaction[i][j] * A_social[i][j])
-                              * np.abs(attitudes[i] - attitudes[j])
-                              * np.sign(attitudes[i] + attitudes[j]))
+                # Noisy consensus with relaxing disturbances
+                d_attitude = ((a_interaction[i][j] * a_social[i][j])
+                              * np.abs(attitude_i - attitude_j)
+                              * -np.sin(attitude_i + attitude_j))
             if method == "type2":
-                d_attitude = ((A_interaction[i][j] / A_social[i][j])
-                              * np.abs(attitudes[i] - attitudes[j])
-                              * np.sign(attitudes[i] + attitudes[j]))
+                # Polarized network
+                d_attitude = ((a_interaction[i][j] / a_social[i][j])
+                              * np.abs(attitude_i - attitude_j)
+                              * np.sin(attitude_i + attitude_j))
             if method == "type3":
-                d_attitude = ((A_interaction[i][j] * A_social[i][j])
-                              * (np.abs(attitudes[i] - attitudes[j]))
-                              * np.sign(attitudes[i] * attitudes[j]))
+                # Extremely noisy almost anti-consensus network
+                d_attitude = ((a_interaction[i][j] * a_social[i][j])
+                              * (np.abs(attitude_i - attitude_j))
+                              * np.sin(attitude_i * attitude_j))
             if method == "type4":
-                d_attitude = ((A_interaction[i][j] * A_social[i][j])
-                              * np.sqrt((attitudes[i] - attitudes[j])**2)
-                              * np.sign(attitudes[i] * attitudes[j]))
-            attitudes[i] = attitudes[i] - d_attitude
-    attitudes = np.where(attitudes < -1, -1, attitudes)
-    attitudes = np.where(attitudes > 1, 1, attitudes)
+                # Noisy consensus with ongoing disturbances
+                d_attitude = ((a_interaction[i][j] * a_social[i][j])
+                              * np.sqrt((attitude_i - attitude_j)**2)
+                              * np.sin(attitude_i * attitude_j))
+            if method == "type5":
+                # Polarized network
+                d_attitude = ((a_interaction[i][j] * a_social[i][j])
+                              * np.sin(attitude_i))
+            attitudes[i] = attitudes[i] + d_attitude
+    attitudes = np.where(attitudes < -np.pi/2, -np.pi/2, attitudes)
+    attitudes = np.where(attitudes > np.pi/2, np.pi/2, attitudes)
     return attitudes
 
 
 def run_model(
         tmax: int,
         number_of_nodes: np.ndarray,
-        A_social: np.ndarray,
+        a_social: np.ndarray,
         attitudes: np.ndarray,
-        reciprocate_interactions: bool = True
+        reciprocate_interactions: bool = True,
+        reinf_method_edges: str = "type1",
+        reinf_method_atittude: str = "type1"
     ) -> list[pl.DataFrame]:
     """Runs the model"""
     # Set up dataframe to track the attitudes over time
@@ -317,31 +338,31 @@ def run_model(
     })
     sim_summary = pl.DataFrame({
         "time": 0,
-        "edge_weight_mean": np.mean(A_social),
-        "edge_weight_median": np.median(A_social),
-        "edge_weight_sd": np.std(A_social),
+        "edge_weight_mean": np.mean(a_social),
+        "edge_weight_median": np.median(a_social),
+        "edge_weight_sd": np.std(a_social),
         "attitude_mean": np.mean(attitudes),
         "attitude_median" : np.median(attitudes),
         "attitude_sd": np.std(attitudes)
     })
     # Run the simulation
     for t in tqdm(range(tmax)):
-        A_interaction = make_interactions(
-            A_social,
+        a_interaction = make_interactions(
+            a_social,
             number_of_nodes,
             reciprocate_interactions
         )
-        A_social = update_edges(
-            A_social,
-            A_interaction,
+        a_social = update_edges(
+            a_social,
+            a_interaction,
             attitudes,
-            method="type1"
+            reinf_method_edges
         )
         attitudes = update_attitudes(
-            A_social,
-            A_interaction,
+            a_social,
+            a_interaction,
             attitudes,
-            method="type1"
+            reinf_method_atittude
         )
         # Add new rows to track nodes over time
         attitudes_t = pl.DataFrame({
@@ -351,9 +372,9 @@ def run_model(
         })
         sim_summary_t = pl.DataFrame({
             "time": t,
-            "edge_weight_mean": np.mean(A_social),
-            "edge_weight_median": np.median(A_social),
-            "edge_weight_sd": np.std(A_social),
+            "edge_weight_mean": np.mean(a_social),
+            "edge_weight_median": np.median(a_social),
+            "edge_weight_sd": np.std(a_social),
             "attitude_mean": np.mean(attitudes),
             "attitude_median" : np.median(attitudes),
             "attitude_sd": np.std(attitudes)
