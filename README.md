@@ -1,5 +1,9 @@
 # Network infodemic model
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/garland-culbreth/network-infodemic-model/.github%2Fworkflows%2Fpytest.yml?style=flat-square&logo=github&labelColor=%2332383f&color=%232da44e)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/garland-culbreth/network-infodemic-model/.github%2Fworkflows%2Fpytest.yml?style=flat-square&logo=github&label=nim&labelColor=%2332383f&color=%232da44e)
 ](https://github.com/garland-culbreth/network-infodemic-model/actions/workflows/pytest.yml)
 
-An complex adaptive network model of information diffusion and network evolution.
+A numerical framework for modeling adaptive complex network dynamics with information diffusion and echo chamber formation.
+
+## Dependencies
+
+[NetworkX](https://networkx.org/) [Numpy](https://numpy.org/) [Polars](https://pola.rs/) [Matplotlib](https://matplotlib.org/) [seaborn](https://seaborn.pydata.org/) [tqdm](https://tqdm.github.io/)
