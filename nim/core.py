@@ -59,6 +59,7 @@ class NetworkModel:
         self.interactions = None
         self.attitude_diffs = None
         self.summary_table = None
+        self.attitude_tracker = None
 
     def create_network(
             self: Self,
@@ -236,6 +237,7 @@ class NetworkModel:
             axis=1)
         self.attitudes = self.attitudes + d_attitudes
         self.attitudes = np.clip(self.attitudes, a_min=-np.pi/2, a_max=np.pi/2)
+        self.attitudes = self.attitudes
         return self
 
     def initialize_summary_table(self: Self) -> Self:
@@ -260,6 +262,28 @@ class NetworkModel:
             [self.summary_table, step_summary_table])
         return self
 
+    def initialize_attitude_tracker(self: Self) -> Self:
+        """Initialize attitude tracking table."""
+        self.attitude_tracker = pl.DataFrame(schema={
+            "time": int,
+            "node": int,
+            "attitude": float})
+        return self
+
+    def update_attitude_tracker(self: Self, time: int) -> Self:
+        """Construct attitude tracking table for one time."""
+        attitudes_flat = self.attitudes.flatten()
+        step_attitude_tracker = pl.DataFrame({
+            "time": np.full(
+                shape=attitudes_flat.shape, fill_value=time, dtype="int64"),
+            "node": np.arange(
+                self.number_of_nodes, dtype="int64").reshape(
+                    attitudes_flat.shape),
+            "attitude": attitudes_flat})
+        self.attitude_tracker = pl.concat(
+            [self.attitude_tracker, step_attitude_tracker])
+        return self
+
     def run_simulation(self: Self, tmax: int) -> Self:
         """Simulate interaction and attitude reinforcement over time.
 
@@ -278,9 +302,11 @@ class NetworkModel:
             msg = "tmax must be greater than 1"
             raise ValueError(msg)
         self.initialize_summary_table()
+        self.initialize_attitude_tracker()
         for t in tqdm(range(tmax)):
             self.compute_attitude_difference_matrix()
             self.make_interactions()
             self.update_connections()
             self.update_attitudes()
             self.update_summary_table(time=t)
+            self.update_attitude_tracker(time=t)
