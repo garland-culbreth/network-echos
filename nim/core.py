@@ -237,7 +237,6 @@ class NetworkModel:
             axis=1)
         self.attitudes = self.attitudes + d_attitudes
         self.attitudes = np.clip(self.attitudes, a_min=-np.pi/2, a_max=np.pi/2)
-        self.attitudes = self.attitudes
         return self
 
     def initialize_summary_table(self: Self) -> Self:
