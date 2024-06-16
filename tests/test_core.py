@@ -216,6 +216,56 @@ class TestCore:
                 f"""Simulation summary table column {col} contains non-finite
                 values."""
 
+    def test_initialize_attitude_tracker(self: Self) -> Self:
+        """Test that summary table initialized OK."""
+        nimodel = nim.core.NetworkModel(
+            number_of_nodes=10,
+            interaction_type="symmetric")
+        nimodel.initialize_attitude_tracker()
+        required_columns = [
+            "time",
+            "node",
+            "attitude"]
+        assert hasattr(nimodel, "attitude_tracker"), \
+            "Attitude tracking table is missing."
+        assert isinstance(nimodel.attitude_tracker, pl.DataFrame), \
+            "Attitude tracking table is not a polars dataframe."
+        for col in required_columns:
+            assert col in nimodel.attitude_tracker.columns, \
+                f"Attitude tracking table is missing column {col}."
+        for col in required_columns:
+            assert nimodel.attitude_tracker[col].dtype.is_numeric(), \
+                f"Attitude tracking table column {col} has incorrect type."
+
+    def test_update_attitude_tracker(self: Self) -> Self:
+        """Test that summary table initialized OK."""
+        nimodel = nim.core.NetworkModel(
+            number_of_nodes=10,
+            interaction_type="symmetric")
+        nimodel.create_network(network_type="gnp_random", p=0.1)
+        nimodel.initialize_attitude_tracker()
+        nimodel.initialize_connections()
+        nimodel.initialize_attitudes()
+        nimodel.update_attitude_tracker(time=1)
+        required_columns = [
+            "time",
+            "node",
+            "attitude"]
+        assert hasattr(nimodel, "attitude_tracker"), \
+            "Attitude tracking table is missing."
+        assert isinstance(nimodel.attitude_tracker, pl.DataFrame), \
+            "Attitude tracking table is not a polars dataframe."
+        for col in required_columns:
+            assert col in nimodel.attitude_tracker.columns, \
+                f"Attitude tracking table is missing column {col}."
+        for col in required_columns:
+            assert nimodel.attitude_tracker[col].dtype.is_numeric(), \
+                f"Attitude tracking table column {col} has incorrect type."
+        for col in required_columns:
+            assert nimodel.attitude_tracker[col].is_finite().all(), \
+                f"""Attitude tracking table column {col} contains non-finite
+                values."""
+
 
 if __name__ == "__main__":
     test_core = TestCore()
@@ -229,3 +279,5 @@ if __name__ == "__main__":
     test_core.test_update_attitudes()
     test_core.test_initialize_summary_table()
     test_core.test_update_summary_table()
+    test_core.test_initialize_attitude_tracker()
+    test_core.test_update_attitude_tracker()
