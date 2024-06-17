@@ -17,7 +17,9 @@ class NetworkModel:
     def __init__(
             self: Self,
             number_of_nodes: int,
-            interaction_type: str) -> Self:
+            interaction_type: str,
+            alpha: float = -1,
+            beta: float = 1e-3) -> Self:
         """Object storing network model data and methods.
 
         Parameters
@@ -28,6 +30,12 @@ class NetworkModel:
             Type of interaction between nodes. If "symmetric"
             interactions will be reciprocated. If "asymmetric",
             interactions may be one-directional.
+        alpha : float
+            Exponent of the adjacency matrix during attitude
+            reinforcement.
+        beta : float
+            Factor governing the rate of attitude change. Smaller
+            values slow attitude change.
 
         Returns
         -------
@@ -44,6 +52,8 @@ class NetworkModel:
             raise ValueError(msg)
         self.number_of_nodes = number_of_nodes
         self.interaction_type = interaction_type
+        self.adjacency_exponent = alpha
+        self.attitude_change_speed = beta
         self.network_type = None
         self.k_neighbors = None
         self.p_edge = None
@@ -232,10 +242,12 @@ class NetworkModel:
         """Calculate change in attitude."""
         d_attitudes = np.sum(
             np.multiply(
-                np.multiply(self.attitudes, self.interactions),
+                np.multiply(
+                    self.attitudes**self.adjacency_exponent, self.interactions),
                 np.sin(self.attitude_diffs)),
             axis=1)
-        self.attitudes = self.attitudes + d_attitudes
+        self.attitudes = (self.attitudes
+                          + (self.attitude_change_speed * d_attitudes))
         self.attitudes = np.clip(self.attitudes, a_min=-np.pi/2, a_max=np.pi/2)
         return self
 
