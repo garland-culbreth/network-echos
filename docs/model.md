@@ -27,9 +27,12 @@ $$
 \mathbf{\Theta}_{ij}(t) = \mathbf{\theta_i}(t) - \mathbf{\theta_j}(t)
 $$
 
-This produces an adaptive complex network where edge strengths and node attitudes are reinforced according to each other over time. When $\mathbf{A}$ is symmetric, this is a modified Kuramoto model ([Kuramoto, 1975](https://doi.org/10.1007/BFb0013365)), with the modifications:
+This produces an adaptive complex network where edge strengths and node attitudes are reinforced according to each other over time.
+
+When $\mathbf{A}(t)$ is symmetric, this is a modified Kuramoto model ([Kuramoto, 1975](https://doi.org/10.1007/BFb0013365)), with the modifications:
+
 1. The mean over all phases is replaced by the simple sum.
 2. The coupling constant is the adjacency matrix of the network, which may be weighted.
 3. The coupling constant has an exponent.
 
-When $\mathbf{A}$ isn't symmetric, this is a circle map ([Ott, 2002](https://www.cambridge.org/core/books/chaos-in-dynamical-systems/7A0749AE3FBBF4312A54D7573C2DAAB5)).
+When $\mathbf{A}(t)$ isn't symmetric, this is a circle map ([Ott, 2002](https://www.cambridge.org/core/books/chaos-in-dynamical-systems/7A0749AE3FBBF4312A54D7573C2DAAB5)).
