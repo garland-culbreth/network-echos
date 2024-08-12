@@ -16,7 +16,7 @@ class TestCore:
         nimodel = nim.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
-        nimodel.create_network(network_type="gnp_random", p=0.1)
+        nimodel.create_network(network_type="erdos_renyi", p=0.1)
         assert hasattr(nimodel, "social_network"), \
             "Social network is missing."
         assert isinstance(nimodel.social_network, nx.Graph), \
@@ -27,7 +27,7 @@ class TestCore:
         nimodel = nim.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
-        nimodel.create_network(network_type="gnp_random", p=0.1)
+        nimodel.create_network(network_type="erdos_renyi", p=0.1)
         nimodel.initialize_connections()
         assert hasattr(nimodel, "connections"), \
             "Adjacency matrix is missing."
@@ -62,7 +62,7 @@ class TestCore:
         nimodel = nim.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
-        nimodel.create_network(network_type="gnp_random", p=0.1)
+        nimodel.create_network(network_type="erdos_renyi", p=0.1)
         nimodel.initialize_connections()
         nimodel.make_symmetric_interactions()
         assert hasattr(nimodel, "interactions"), \
@@ -84,7 +84,7 @@ class TestCore:
         nimodel = nim.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="asymmetric")
-        nimodel.create_network(network_type="gnp_random", p=0.1)
+        nimodel.create_network(network_type="erdos_renyi", p=0.1)
         nimodel.initialize_connections()
         nimodel.make_asymmetric_interactions()
         assert hasattr(nimodel, "interactions"), \
@@ -123,7 +123,7 @@ class TestCore:
         nimodel = nim.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
-        nimodel.create_network(network_type="gnp_random", p=0.1)
+        nimodel.create_network(network_type="erdos_renyi", p=0.1)
         nimodel.initialize_connections()
         nimodel.initialize_attitudes()
         nimodel.compute_attitude_difference_matrix()
@@ -145,7 +145,7 @@ class TestCore:
         nimodel = nim.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
-        nimodel.create_network(network_type="gnp_random", p=0.1)
+        nimodel.create_network(network_type="erdos_renyi", p=0.1)
         nimodel.initialize_connections()
         nimodel.initialize_attitudes()
         nimodel.compute_attitude_difference_matrix()
@@ -190,7 +190,7 @@ class TestCore:
         nimodel = nim.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
-        nimodel.create_network(network_type="gnp_random", p=0.1)
+        nimodel.create_network(network_type="erdos_renyi", p=0.1)
         nimodel.initialize_summary_table()
         nimodel.initialize_connections()
         nimodel.initialize_attitudes()
@@ -242,7 +242,7 @@ class TestCore:
         nimodel = nim.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
-        nimodel.create_network(network_type="gnp_random", p=0.1)
+        nimodel.create_network(network_type="erdos_renyi", p=0.1)
         nimodel.initialize_attitude_tracker()
         nimodel.initialize_connections()
         nimodel.initialize_attitudes()

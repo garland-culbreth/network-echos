@@ -75,7 +75,7 @@ class NetworkModel:
             self: Self,
             network_type: Literal[
                 "complete",
-                "gnp_random",
+                "erdos_renyi",
                 "watts_strogatz",
                 "newman_watts_strogatz",
                 "barabasi_albert"],
@@ -89,7 +89,7 @@ class NetworkModel:
         network_type: str
             Type of network to create.
         p : float, optional, default: 0.1
-            Required if network_type is one of {'gnp_random',
+            Required if network_type is one of {'erdos_renyi',
             'watts_strogatz', 'newman_watts_strogatz'}. Probability for
             edge creation.
         k : int, optional, default: 2
@@ -108,8 +108,8 @@ class NetworkModel:
         """
         if network_type == "complete":
             g_initial = nx.complete_graph(n=self.number_of_nodes)
-        if network_type == "gnp_random":
-            g_initial = nx.gnp_random_graph(n=self.number_of_nodes, p=p)
+        if network_type == "erdos_renyi":
+            g_initial = nx.erdos_renyi_graph(n=self.number_of_nodes, p=p)
             self.p_edge = p
         if network_type == "watts_strogatz":
             g_initial = nx.watts_strogatz_graph(
