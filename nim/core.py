@@ -78,7 +78,7 @@ class NetworkModel:
                 "gnp_random",
                 "watts_strogatz",
                 "newman_watts_strogatz",
-                "barabasi_albert_graph"],
+                "barabasi_albert"],
             p: float = 0.1,
             k: int = 2,
             m: float = 1.0) -> Self:
@@ -97,7 +97,7 @@ class NetworkModel:
             'newman_watts_strogatz'}. Each node is joined with its `k`
             nearest neighbors in a ring topology.
         m : float, optional, default: 1.0
-            Required if network_type is 'barabasi_albert_graph'. Number
+            Required if network_type is 'barabasi_albert'. Number
             of edges to attach from a new node to existing nodes.
 
         Returns
