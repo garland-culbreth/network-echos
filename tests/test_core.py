@@ -8,8 +8,8 @@ import polars as pl
 import nim.core
 
 
-class TestCore:
-    """Class with methods for testing core functionality."""
+class TestGenerator:
+    """Class with methods for testing network generation functionality."""
 
     def test_create_network(self: Self) -> Self:
         """Test that basis social network constructs OK."""
@@ -57,46 +57,8 @@ class TestCore:
         assert np.all(nimodel.attitudes <= np.pi/2), \
             "Attitude vector contains values greater than pi/2."
 
-    def test_make_symmetric_interactions(self: Self) -> Self:
-        """Test that symmetric interaction matrices construct OK."""
-        nimodel = nim.core.NetworkModel(
-            number_of_nodes=10,
-            interaction_type="symmetric")
-        nimodel.create_network(network_type="erdos_renyi", p=0.1)
-        nimodel.initialize_connections()
-        nimodel.make_symmetric_interactions()
-        assert hasattr(nimodel, "interactions"), \
-            "Interaction matrix is missing."
-        assert isinstance(nimodel.interactions, np.ndarray), \
-            "Interaction matrix is not a numpy ndarray."
-        assert np.all(np.isfinite(nimodel.interactions)), \
-            "Interaction matrix contains non-finite values."
-        assert np.all(nimodel.interactions >= 0), \
-            "Interaction matrix contains values less than zero."
-        assert np.all(nimodel.interactions <= 1), \
-            "Interaction matrix contains values greater than one."
-        assert np.all(
-            nimodel.interactions == nimodel.interactions.transpose()), \
-                "Interaction matrix is not symmetric."
-
-    def test_make_asymmetric_interactions(self: Self) -> Self:
-        """Test that asymmetric interaction matrices construct OK."""
-        nimodel = nim.core.NetworkModel(
-            number_of_nodes=10,
-            interaction_type="asymmetric")
-        nimodel.create_network(network_type="erdos_renyi", p=0.1)
-        nimodel.initialize_connections()
-        nimodel.make_asymmetric_interactions()
-        assert hasattr(nimodel, "interactions"), \
-            "Interaction matrix is missing."
-        assert isinstance(nimodel.interactions, np.ndarray), \
-            "Interaction matrix is not a numpy ndarray."
-        assert np.all(np.isfinite(nimodel.interactions)), \
-            "Interaction matrix contains non-finite values."
-        assert np.all(nimodel.interactions >= 0), \
-            "Interaction matrix contains values less than zero."
-        assert np.all(nimodel.interactions <= 1), \
-            "Interaction matrix contains values greater than one."
+class TestDynamics:
+    """Class with methods for testing dynamics functionality."""
 
     def test_compute_attitude_difference_matrix(self: Self) -> Self:
         """Test that attitude difference matrix constructs OK."""
@@ -161,6 +123,9 @@ class TestCore:
             "Attitude vector contains values less than -pi/2."
         assert np.all(nimodel.attitudes <= np.pi/2), \
             "Attitude vector contains values greater than pi/2."
+
+class TestSimulator:
+    """Class with methods for testing simulator functionality."""
 
     def test_initialize_summary_table(self: Self) -> Self:
         """Test that summary table initialized OK."""
@@ -268,16 +233,20 @@ class TestCore:
 
 
 if __name__ == "__main__":
-    test_core = TestCore()
-    test_core.test_create_network()
-    test_core.test_initialize_connections()
-    test_core.test_initialize_attitudes()
-    test_core.test_make_symmetric_interactions()
-    test_core.test_make_asymmetric_interactions()
-    test_core.test_compute_attitude_difference_matrix()
-    test_core.test_update_connections()
-    test_core.test_update_attitudes()
-    test_core.test_initialize_summary_table()
-    test_core.test_update_summary_table()
-    test_core.test_initialize_attitude_tracker()
-    test_core.test_update_attitude_tracker()
+    test_generator = TestGenerator()
+    test_generator.test_create_network()
+    test_generator.test_initialize_connections()
+    test_generator.test_initialize_attitudes()
+
+    test_dynamics = TestDynamics()
+    test_dynamics.test_make_symmetric_interactions()
+    test_dynamics.test_make_asymmetric_interactions()
+    test_dynamics.test_compute_attitude_difference_matrix()
+    test_dynamics.test_update_connections()
+    test_dynamics.test_update_attitudes()
+
+    test_simulator = TestSimulator()
+    test_simulator.test_initialize_summary_table()
+    test_simulator.test_update_summary_table()
+    test_simulator.test_initialize_attitude_tracker()
+    test_simulator.test_update_attitude_tracker()
