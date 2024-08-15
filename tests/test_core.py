@@ -274,18 +274,19 @@ class TestSimulator:
 
 
 if __name__ == "__main__":
+    # Network and attitude generation
     test_generator = TestGenerator()
     test_generator.test_create_network()
     test_generator.test_initialize_connections()
     test_generator.test_initialize_attitudes()
-
+    # Network dynamics
     test_dynamics = TestDynamics()
     test_dynamics.test_make_symmetric_interactions()
     test_dynamics.test_make_asymmetric_interactions()
     test_dynamics.test_compute_attitude_difference_matrix()
     test_dynamics.test_update_connections()
     test_dynamics.test_update_attitudes()
-
+    # Simulation and summarization
     test_simulator = TestSimulator()
     test_simulator.test_initialize_summary_table()
     test_simulator.test_update_summary_table()
