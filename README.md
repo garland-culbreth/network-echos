@@ -1,4 +1,4 @@
-# Network infodemic model
+# Network echos
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/garland-culbreth/network-infodemic-model/pytest.yml?style=flat-square&logo=github&logoColor=%23cdd9e5&label=tests&labelColor=%23373e47&color=%23347d39)](https://github.com/garland-culbreth/network-infodemic-model/actions/workflows/pytest.yml) [![python](https://img.shields.io/badge/3.11_%7C_3.12-3776AB?style=flat-square&logo=python&logoColor=ffffff&label=python&labelColor=373e47)](https://github.com/garland-culbreth/network-infodemic-model) [![GitHub last commit](https://img.shields.io/github/last-commit/garland-culbreth/network-infodemic-model?style=flat-square&logo=git&logoColor=%23cdd9e5&labelColor=%23373e47&color=%238256d0)](https://github.com/garland-culbreth/network-infodemic-model/commits/main/)
 
 A numerical framework for modeling adaptive complex network dynamics with information diffusion and echo chamber formation.
