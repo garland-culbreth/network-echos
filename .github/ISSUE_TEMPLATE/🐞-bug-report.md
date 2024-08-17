@@ -1,5 +1,5 @@
 ---
-name: Bug report
+name: "\U0001F41E Bug report"
 about: Create a report to help us improve
 title: 'Bug: BUG'
 labels: ''
@@ -10,22 +10,14 @@ assignees: ''
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. ...
-2. ...
-3. ...
-
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**Error log**
+Add the full error log which is output when the bug occurs.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+**Minimum working example**
+Add a minimal example which can be used to reproduce the bug.
 
 **Additional context**
 Add any other context about the problem here.
