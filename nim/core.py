@@ -193,7 +193,7 @@ class NetworkModel:
         self : Self@NetworkModel
             An instance of the NetworkModel object.
 
-        """
+        """  # noqa: E501
         rng = np.random.default_rng()
         if distribution == "normal":
             attitudes = rng.normal(
