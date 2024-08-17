@@ -66,6 +66,10 @@ class NetworkModel:
         self.attitude_distribution = None
         self.attitude_distribution_loc = None
         self.attitude_distribution_scale = None
+        self.attitude_distribution_low = None
+        self.attitude_distribution_high = None
+        self.attitude_distribution_mu = None
+        self.attitude_distribution_kappa = None
         self.interactions = None
         self.attitude_diffs = None
         self.summary_table = None
@@ -160,19 +164,29 @@ class NetworkModel:
 
     def initialize_attitudes(
             self: Self,
-            distribution: Literal["normal"] = "normal",
-            loc: float = 0.0,
-            scale: float = 0.3) -> Self:
+            distribution: Literal[
+                "normal",
+                "uniform",
+                "laplace",
+                "vonmises"] = "normal",
+            a: float = 0.0,
+            b: float = 0.3) -> Self:
         """Set initial node attitudes.
 
         Parameters
         ----------
-        distribution : str {'normal'}, default: 'normal'
+        distribution : str {'normal', 'uniform', 'laplace', 'vonmises'}, default: 'normal'
             Type of probability distribution to sample attitudes from.
-        loc : float, default: 0.0
-            Location parameter for `distribution`.
-        scale : float, default: 0.3
-            Scale parameter for `distribution`.
+        a : float, default: 0.0
+            First parameter for `distribution`. If `distribution` is
+            'normal' or 'laplace' this is the `loc` parameter. If
+            `distribution` is 'uniform', this is the lower bound. If
+            `distribution` is 'vonmises' this is the `mu` parameter.
+        b : float, default: 0.3
+            Second parameter for `distribution`. If `distribution` is
+            'normal' or 'laplace' this is the `scale` parameter. If
+            `distribution` is 'uniform', this is the upper bound. If
+            `distribution` is 'vonmises' this is the `kappa` parameter.
 
         Returns
         -------
@@ -183,12 +197,27 @@ class NetworkModel:
         rng = np.random.default_rng()
         if distribution == "normal":
             attitudes = rng.normal(
-                loc=loc, scale=scale, size=(1, self.number_of_nodes))
+                loc=a, scale=b, size=(1, self.number_of_nodes))
+            self.attitude_distribution_loc = a
+            self.attitude_distribution_scale = b
+        if distribution == "laplace":
+            attitudes = rng.laplace(
+                loc=a, scale=b, size=(1, self.number_of_nodes))
+            self.attitude_distribution_loc = a
+            self.attitude_distribution_scale = b
+        if distribution == "vonmises":
+            attitudes = rng.vonmises(
+                mu=a, kappa=b, size=(1, self.number_of_nodes))
+            self.attitude_distribution_mu = a
+            self.attitude_distribution_kappa = b
+        if distribution == "uniform":
+            attitudes = rng.uniform(
+                low=a, high=b, size=(1, self.number_of_nodes))
+            self.attitude_distribution_low = a
+            self.attitude_distribution_high = b
         attitudes = np.clip(attitudes, a_min=-np.pi/2, a_max=np.pi/2)
         self.attitudes = attitudes
         self.attitude_distribution = distribution
-        self.attitude_distribution_loc = loc
-        self.attitude_distribution_scale = scale
         return self
 
     def make_symmetric_interactions(self: Self) -> Self:
