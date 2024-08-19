@@ -1,6 +1,0 @@
-[lint]
-select = ["ALL"]
-
-[lint.per-file-ignores]
-"__init__.py" = ["D104"]
-"tests/*.py" = ["S101"]
