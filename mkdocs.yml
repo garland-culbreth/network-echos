@@ -1,6 +1,9 @@
 site_name: Network Infodemic Model
 # site_url: https://mydomain.org/mysite
 
+plugins:
+  - search
+
 theme:
   name: material
   palette:
