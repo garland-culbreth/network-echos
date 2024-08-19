@@ -30,6 +30,8 @@ theme:
   font:
     text: Inter
     code: JetBrains Mono
+  features:
+    - toc.follow
 
 markdown_extensions:
   - pymdownx.arithmatex:
