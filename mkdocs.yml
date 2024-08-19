@@ -35,6 +35,8 @@ theme:
     code: JetBrains Mono
   features:
     - toc.follow
+    - search.suggest
+    - search.highlight
 
 markdown_extensions:
   - pymdownx.arithmatex:
