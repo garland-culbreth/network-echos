@@ -5,7 +5,7 @@ import networkx as nx
 import numpy as np
 import polars as pl
 
-import netecho.core
+import netechos.core
 
 
 class TestGenerator:
@@ -13,7 +13,7 @@ class TestGenerator:
 
     def test_create_network(self: Self) -> Self:
         """Test that basis social network constructs OK."""
-        nimodel = netecho.core.NetworkModel(
+        nimodel = netechos.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
         nimodel.create_network(network_type="erdos_renyi", p=0.1)
@@ -24,7 +24,7 @@ class TestGenerator:
 
     def test_initialize_connections(self: Self) -> Self:
         """Test that adjacency matrix attribute constructs OK."""
-        nimodel = netecho.core.NetworkModel(
+        nimodel = netechos.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
         nimodel.create_network(network_type="erdos_renyi", p=0.1)
@@ -42,7 +42,7 @@ class TestGenerator:
 
     def test_initialize_attitudes(self: Self) -> Self:
         """Test that attitudes vector constructs OK."""
-        nimodel = netecho.core.NetworkModel(
+        nimodel = netechos.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
         nimodel.initialize_attitudes()
@@ -62,7 +62,7 @@ class TestDynamics:
 
     def test_make_symmetric_interactions(self: Self) -> Self:
         """Test that symmetric interaction matrices construct OK."""
-        nimodel = netecho.core.NetworkModel(
+        nimodel = netechos.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
         nimodel.create_network(network_type="erdos_renyi", p=0.1)
@@ -84,7 +84,7 @@ class TestDynamics:
 
     def test_make_asymmetric_interactions(self: Self) -> Self:
         """Test that asymmetric interaction matrices construct OK."""
-        nimodel = netecho.core.NetworkModel(
+        nimodel = netechos.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="asymmetric")
         nimodel.create_network(network_type="erdos_renyi", p=0.1)
@@ -103,7 +103,7 @@ class TestDynamics:
 
     def test_compute_attitude_difference_matrix(self: Self) -> Self:
         """Test that attitude difference matrix constructs OK."""
-        nimodel = netecho.core.NetworkModel(
+        nimodel = netechos.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
         nimodel.initialize_attitudes()
@@ -123,7 +123,7 @@ class TestDynamics:
 
     def test_update_connections(self: Self) -> Self:
         """Test that connections update OK."""
-        nimodel = netecho.core.NetworkModel(
+        nimodel = netechos.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
         nimodel.create_network(network_type="erdos_renyi", p=0.1)
@@ -145,7 +145,7 @@ class TestDynamics:
 
     def test_update_attitudes(self: Self) -> Self:
         """Test that attitudes update OK."""
-        nimodel = netecho.core.NetworkModel(
+        nimodel = netechos.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
         nimodel.create_network(network_type="erdos_renyi", p=0.1)
@@ -170,7 +170,7 @@ class TestSimulator:
 
     def test_initialize_summary_table(self: Self) -> Self:
         """Test that summary table initialized OK."""
-        nimodel = netecho.core.NetworkModel(
+        nimodel = netechos.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
         nimodel.initialize_summary_table()
@@ -193,7 +193,7 @@ class TestSimulator:
 
     def test_update_summary_table(self: Self) -> Self:
         """Test that summary table initialized OK."""
-        nimodel = netecho.core.NetworkModel(
+        nimodel = netechos.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
         nimodel.create_network(network_type="erdos_renyi", p=0.1)
@@ -224,7 +224,7 @@ class TestSimulator:
 
     def test_initialize_attitude_tracker(self: Self) -> Self:
         """Test that summary table initialized OK."""
-        nimodel = netecho.core.NetworkModel(
+        nimodel = netechos.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
         nimodel.initialize_attitude_tracker()
@@ -245,7 +245,7 @@ class TestSimulator:
 
     def test_update_attitude_tracker(self: Self) -> Self:
         """Test that summary table initialized OK."""
-        nimodel = netecho.core.NetworkModel(
+        nimodel = netechos.core.NetworkModel(
             number_of_nodes=10,
             interaction_type="symmetric")
         nimodel.create_network(network_type="erdos_renyi", p=0.1)
