@@ -1,3 +1,5 @@
+# Model
+
 ## Initialization
 
 ### Network
@@ -5,6 +7,7 @@
 At initialization, a social network, $\mathcal{G}$, is constructed according to standard network construction algorithms the user can select from.
 
 Available network constructors are:
+
 - `complete`: A graph in which every node is connected to every other node.
 - `erdos_renyi`: An [Erdős-Rényi](https://networkx.org/documentation/stable/reference/generated/networkx.generators.random_graphs.erdos_renyi_graph.html) random graph ([Erdős and Rényi, 1959](https://static.renyi.hu/~p_erdos/1959-11.pdf)).
 - `watts_strogatz`: A [Watts–Strogatz](https://networkx.org/documentation/stable/reference/generated/networkx.generators.random_graphs.watts_strogatz_graph.html#networkx.generators.random_graphs.watts_strogatz_graph) small-world graph ([Watts and Strogatz, 1998](https://doi.org/10.1038/30918)).
@@ -16,6 +19,7 @@ Available network constructors are:
 Each node in $\mathcal{G}$ is assigned an initial attitude, $\theta_i$, sampled from a specified distribution and are constrained to the range $[-\frac{\pi}{2}, \frac{\pi}{2}]$.
 
 Available attitude distributions are:
+
 - `normal`: A [Gaussian normal](https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.normal.html) distribution.
 - `uniform`: A [uniform](https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.uniform.html#numpy.random.Generator.uniform) distribution.
 - `laplace`: A [Laplace](https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.laplace.html#numpy.random.Generator.laplace) distribution.
