@@ -2,7 +2,7 @@
 
 [![Pytest Workflow Status](https://img.shields.io/github/actions/workflow/status/garland-culbreth/network-echos/pytest.yml?style=flat-square&logo=github&&label=tests&logoColor=white&labelColor=393f46&color=46954a)](https://github.com/garland-culbreth/network-infodemic-model/actions/workflows/pytest.yml) [![Ruff Workflow Status](https://img.shields.io/github/actions/workflow/status/garland-culbreth/network-infodemic-model/ruff.yml?style=flat-square&logo=github&logoColor=%23cdd9e5&label=ruff&labelColor=393f46&color=46954a)](https://github.com/garland-culbreth/network-infodemic-model/actions/workflows/ruff.yml) [![python](https://img.shields.io/badge/3.11_%7C_3.12-3776AB?style=flat-square&logo=python&logoColor=ffffff&label=python&labelColor=393f46)](https://github.com/garland-culbreth/network-infodemic-model) [![GitHub last commit](https://img.shields.io/github/last-commit/garland-culbreth/network-infodemic-model?style=flat-square&logo=git&logoColor=%23cdd9e5&labelColor=393f46&color=8256d0)](https://github.com/garland-culbreth/network-infodemic-model/commits/main/)
 
-A numerical framework for modeling adaptive complex network dynamics with information diffusion and echo chamber formation.
+A complex adaptive systems framework for modeling information diffusion, polarization, and echo chamber formation. Simulate contact network evolution, individual adaptation, and emergent collective behaviors driven by adaptive interaction and reinforcement dynamics.
 
 ## Built with
 
