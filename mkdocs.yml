@@ -6,6 +6,11 @@ repo_name: garland-culbreth/network-echos
 plugins:
   - search
 
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
 theme:
   name: material
   palette:
