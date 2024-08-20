@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "network-echos"
+version = "0.0.1"
+authors = [
+  {name = "Garland Culbreth", email = "culbreth.garland@gmail.com"}]
+maintainers = [
+  {name = "Garland Culbreth", email = "culbreth.garland@gmail.com"}]
+dependencies = [
+  "networkx",
+  "numpy",
+  "polars",
+  "matplotlib",
+  "seaborn",
+  "tqdm",
+  "pytest",
+  "ruff",
+  "mkdocs-material"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["D104"]
+"tests/*.py" = ["S101"]
