@@ -1,5 +1,10 @@
 site_name: Network Infodemic Model
 # site_url: https://mydomain.org/mysite
+repo_url: https://github.com/garland-culbreth/network-echos
+repo_name: garland-culbreth/network-echos
+
+plugins:
+  - search
 
 theme:
   name: material
@@ -30,6 +35,10 @@ theme:
   font:
     text: Inter
     code: JetBrains Mono
+  features:
+    - toc.follow
+    - search.suggest
+    - search.highlight
 
 markdown_extensions:
   - pymdownx.arithmatex:
