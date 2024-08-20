@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import polars as pl
 import seaborn as sns
 
-from netecho.core import NetworkModel
+from netechos.core import NetworkModel
 
 
 class NetworkPlot:
