@@ -1,3 +1,3 @@
-# netechos.core
+# netechos.plot
 
 Work in progress
