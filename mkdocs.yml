@@ -36,11 +36,18 @@ theme:
     text: Inter
     code: JetBrains Mono
   features:
+    - navigation.tracking
+    - navigation.top
     - toc.follow
     - search.suggest
     - search.highlight
 
 markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - toc:
+      permalink: true
   - pymdownx.arithmatex:
       generic: true
       block_tag: 'pre'
