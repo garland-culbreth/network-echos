@@ -168,21 +168,21 @@ class NetworkModel:
                 "normal",
                 "uniform",
                 "laplace",
-                "vonmises"] = "normal",
+                "vonmises"] = "vonmises",
             a: float = 0.0,
-            b: float = 0.3) -> Self:
+            b: float = 5) -> Self:
         """Set initial node attitudes.
 
         Parameters
         ----------
-        distribution : str {'normal', 'uniform', 'laplace', 'vonmises'}, default: 'normal'
+        distribution : str {'normal', 'uniform', 'laplace', 'vonmises'}, default: 'vonmises'
             Type of probability distribution to sample attitudes from.
         a : float, default: 0.0
             First parameter for `distribution`. If `distribution` is
             'normal' or 'laplace' this is the `loc` parameter. If
             `distribution` is 'uniform', this is the lower bound. If
             `distribution` is 'vonmises' this is the `mu` parameter.
-        b : float, default: 0.3
+        b : float, default: 5
             Second parameter for `distribution`. If `distribution` is
             'normal' or 'laplace' this is the `scale` parameter. If
             `distribution` is 'uniform', this is the upper bound. If
