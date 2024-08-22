@@ -18,7 +18,7 @@ class NetworkModel:
             self: Self,
             number_of_nodes: int,
             interaction_type: str,
-            alpha: float = -1,
+            alpha: float = 1,
             beta: float = 1e-3) -> Self:
         """Object storing network model data and methods.
 
@@ -269,12 +269,13 @@ class NetworkModel:
 
     def update_attitudes(self: Self) -> Self:
         """Calculate change in attitude."""
-        d_attitudes = np.sum(
-            np.multiply(
-                np.multiply(
-                    self.attitudes**self.adjacency_exponent, self.interactions),
-                np.sin(self.attitude_diffs)),
-            axis=1)
+        connections_to_power = np.where(
+            self.connections != 0,
+            np.power(self.connections, self.adjacency_exponent),
+            0)
+        d_attitudes = np.multiply(
+                np.multiply(connections_to_power, self.interactions),
+                np.sin(self.attitude_diffs)).sum(axis=1)
         self.attitudes = (self.attitudes
                           + (self.attitude_change_speed * d_attitudes))
         self.attitudes = np.clip(self.attitudes, a_min=-np.pi/2, a_max=np.pi/2)
