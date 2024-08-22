@@ -1,3 +1,3 @@
 # netechos.core
 
-Work in progress
+::: netechos.core.NetworkModel
