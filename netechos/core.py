@@ -175,7 +175,7 @@ class NetworkModel:
 
         Parameters
         ----------
-        distribution : str {'normal', 'uniform', 'laplace', 'vonmises'}, default: 'normal'
+        distribution : str {'normal', 'uniform', 'laplace', 'vonmises'}, default: 'vonmises'
             Type of probability distribution to sample attitudes from.
         a : float, default: 0.0
             First parameter for `distribution`. If `distribution` is
