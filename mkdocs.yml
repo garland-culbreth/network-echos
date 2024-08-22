@@ -10,6 +10,10 @@ plugins:
         python:
           options:
             docstring_style: numpy
+            docstring_section_style: table
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            parameter_headings: true
 
 theme:
   name: material
