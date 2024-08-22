@@ -292,7 +292,20 @@ class NetworkModel:
         return self
 
     def update_summary_table(self: Self, time: int) -> Self:
-        """Construct summary of the network at one time."""
+        """Construct summary of the network at one time.
+
+        Parameters
+        ----------
+        time : int
+            Time index. Will be assigned to all rows of the `time`
+            column being added to the summary table.
+
+        Returns
+        -------
+        self : Self@NetworkModel
+            An instance of the NetworkModel object.
+
+        """
         step_summary_table = pl.DataFrame({
             "time": time,
             "attitude_mean": np.mean(np.sin(self.attitudes)),
@@ -312,7 +325,20 @@ class NetworkModel:
         return self
 
     def update_attitude_tracker(self: Self, time: int) -> Self:
-        """Construct attitude tracking table for one time."""
+        """Construct attitude tracking table for one time.
+
+        Parameters
+        ----------
+        time : int
+            Time index. Will be assigned to all rows of the `time`
+            column being added to the summary table.
+
+        Returns
+        -------
+        self : Self@NetworkModel
+            An instance of the NetworkModel object.
+
+        """
         attitudes_flat = self.attitudes.flatten()
         step_attitude_tracker = pl.DataFrame({
             "time": np.full(

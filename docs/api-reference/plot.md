@@ -1,3 +1,3 @@
 # netechos.plot
 
-Work in progress
+::: netechos.plot.NetworkPlot
