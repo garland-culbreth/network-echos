@@ -5,6 +5,7 @@ repo_name: garland-culbreth/network-echos
 
 plugins:
   - search
+  - mkdocstrings
 
 theme:
   name: material
