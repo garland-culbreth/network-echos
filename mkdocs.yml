@@ -5,7 +5,11 @@ repo_name: garland-culbreth/network-echos
 
 plugins:
   - search
-  - mkdocstrings
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
 
 theme:
   name: material
