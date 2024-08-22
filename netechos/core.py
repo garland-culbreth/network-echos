@@ -182,7 +182,7 @@ class NetworkModel:
             'normal' or 'laplace' this is the `loc` parameter. If
             `distribution` is 'uniform', this is the lower bound. If
             `distribution` is 'vonmises' this is the `mu` parameter.
-        b : float, default: 0.3
+        b : float, default: 5
             Second parameter for `distribution`. If `distribution` is
             'normal' or 'laplace' this is the `scale` parameter. If
             `distribution` is 'uniform', this is the upper bound. If
