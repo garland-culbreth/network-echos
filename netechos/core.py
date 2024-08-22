@@ -168,9 +168,9 @@ class NetworkModel:
                 "normal",
                 "uniform",
                 "laplace",
-                "vonmises"] = "normal",
+                "vonmises"] = "vonmises",
             a: float = 0.0,
-            b: float = 0.3) -> Self:
+            b: float = 5) -> Self:
         """Set initial node attitudes.
 
         Parameters
