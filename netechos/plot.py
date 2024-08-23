@@ -1,4 +1,5 @@
 """Methods for plotting network model information."""
+
 from typing import Literal, Self
 
 import matplotlib.pyplot as plt
@@ -12,9 +13,10 @@ class NetworkPlot:
     """Object with basic plotting methods for model properties."""
 
     def __init__(
-            self: Self,
-            model: NetworkModel,
-            theme: Literal["ticks", "whitegrid", "darkgrid"] = "ticks") -> Self:
+        self: Self,
+        model: NetworkModel,
+        theme: Literal["ticks", "whitegrid", "darkgrid"] = "ticks",
+    ) -> Self:
         """Object to hold plots and plotting methods.
 
         Parameters
@@ -40,9 +42,10 @@ class NetworkPlot:
             sns.set_theme(context="notebook", style="darkgrid")
 
     def attitude_and_connection_means(
-            self:Self,
-            fig_width: float = 7,
-            fig_height: float = 3) -> Self:
+        self: Self,
+        fig_width: float = 7,
+        fig_height: float = 3,
+    ) -> Self:
         """Plot mean attitude over time.
 
         Parameters
@@ -65,12 +68,14 @@ class NetworkPlot:
             data=self.summary_table,
             x="time",
             y="attitude_mean",
-            ax=ax0)
+            ax=ax0,
+        )
         sns.lineplot(
             data=self.summary_table,
             x="time",
             y="connection_mean",
-            ax=ax1)
+            ax=ax1,
+        )
         ax0.set_xscale("log")
         ax1.set_xscale("log")
         sns.despine(ax=ax0)
@@ -80,9 +85,10 @@ class NetworkPlot:
         return self
 
     def node_attitudes_over_time(
-            self: Self,
-            fig_width: float = 5,
-            fig_height: float = 3) -> Self:
+        self: Self,
+        fig_width: float = 5,
+        fig_height: float = 3,
+    ) -> Self:
         """Plot individual node attitudes over time.
 
         Parameters
@@ -100,7 +106,8 @@ class NetworkPlot:
         """
         tmax = self.attitude_tracker["time"].max()
         self.attitude_tracker = self.attitude_tracker.with_columns(
-            attitude_sin=pl.col("attitude").sin())
+            attitude_sin=pl.col("attitude").sin(),
+        )
         fig, ax = plt.subplots(figsize=(fig_width, fig_height))
         ax.hlines(y=0, xmin=0, xmax=tmax, color="#444444")
         sns.lineplot(
@@ -108,7 +115,8 @@ class NetworkPlot:
             x="time",
             y="attitude_sin",
             hue="node",
-            ax=ax)
+            ax=ax,
+        )
         sns.despine(ax=ax)
         sns.move_legend(ax, loc="upper left", bbox_to_anchor=(1, 1))
         fig.tight_layout()
