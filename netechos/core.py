@@ -3,6 +3,7 @@
 Defines the core class and methods for constructing and running an
 instance of the model.
 """
+
 from typing import Literal, Self
 
 import networkx as nx
@@ -15,11 +16,12 @@ class NetworkModel:
     """Object containing network model parameters and methods."""
 
     def __init__(
-            self: Self,
-            number_of_nodes: int,
-            interaction_type: str,
-            alpha: float = 1,
-            beta: float = 1e-3) -> Self:
+        self: Self,
+        number_of_nodes: int,
+        interaction_type: str,
+        alpha: float = 1,
+        beta: float = 1e-3,
+    ) -> Self:
         """Object storing network model data and methods.
 
         Parameters
@@ -76,16 +78,18 @@ class NetworkModel:
         self.attitude_tracker = None
 
     def create_network(
-            self: Self,
-            network_type: Literal[
-                "complete",
-                "erdos_renyi",
-                "watts_strogatz",
-                "newman_watts_strogatz",
-                "barabasi_albert"],
-            p: float = 0.1,
-            k: int = 2,
-            m: float = 1.0) -> Self:
+        self: Self,
+        network_type: Literal[
+            "complete",
+            "erdos_renyi",
+            "watts_strogatz",
+            "newman_watts_strogatz",
+            "barabasi_albert",
+        ],
+        p: float = 0.1,
+        k: int = 2,
+        m: float = 1.0,
+    ) -> Self:
         """Create initial social network.
 
         Parameters
@@ -117,12 +121,18 @@ class NetworkModel:
             self.p_edge = p
         if network_type == "watts_strogatz":
             g_initial = nx.watts_strogatz_graph(
-                n=self.number_of_nodes, k=k, p=p)
+                n=self.number_of_nodes,
+                k=k,
+                p=p,
+            )
             self.k_neighbors = k
             self.p_edge = p
         if network_type == "newman_watts_strogatz":
             g_initial = nx.newman_watts_strogatz_graph(
-                n=self.number_of_nodes, k=k, p=p)
+                n=self.number_of_nodes,
+                k=k,
+                p=p,
+            )
             self.k_neighbors = k
             self.p_edge = p
         if network_type == "barabasi_albert":
@@ -133,9 +143,10 @@ class NetworkModel:
         return self
 
     def initialize_connections(
-            self: Self,
-            neighbor_weight: float = 1.0,
-            non_neighbor_weight: float = 0.0) -> Self:
+        self: Self,
+        neighbor_weight: float = 1.0,
+        non_neighbor_weight: float = 0.0,
+    ) -> Self:
         """Set initial network edge weights.
 
         Parameters
@@ -163,14 +174,16 @@ class NetworkModel:
         return self
 
     def initialize_attitudes(
-            self: Self,
-            distribution: Literal[
-                "normal",
-                "uniform",
-                "laplace",
-                "vonmises"] = "vonmises",
-            a: float = 0.0,
-            b: float = 5) -> Self:
+        self: Self,
+        distribution: Literal[
+            "normal",
+            "uniform",
+            "laplace",
+            "vonmises",
+        ] = "vonmises",
+        a: float = 0.0,
+        b: float = 5,
+    ) -> Self:
         """Set initial node attitudes.
 
         Parameters
@@ -197,25 +210,37 @@ class NetworkModel:
         rng = np.random.default_rng()
         if distribution == "normal":
             attitudes = rng.normal(
-                loc=a, scale=b, size=(1, self.number_of_nodes))
+                loc=a,
+                scale=b,
+                size=(1, self.number_of_nodes),
+            )
             self.attitude_distribution_loc = a
             self.attitude_distribution_scale = b
         if distribution == "laplace":
             attitudes = rng.laplace(
-                loc=a, scale=b, size=(1, self.number_of_nodes))
+                loc=a,
+                scale=b,
+                size=(1, self.number_of_nodes),
+            )
             self.attitude_distribution_loc = a
             self.attitude_distribution_scale = b
         if distribution == "vonmises":
             attitudes = rng.vonmises(
-                mu=a, kappa=b, size=(1, self.number_of_nodes))
+                mu=a,
+                kappa=b,
+                size=(1, self.number_of_nodes),
+            )
             self.attitude_distribution_mu = a
             self.attitude_distribution_kappa = b
         if distribution == "uniform":
             attitudes = rng.uniform(
-                low=a, high=b, size=(1, self.number_of_nodes))
+                low=a,
+                high=b,
+                size=(1, self.number_of_nodes),
+            )
             self.attitude_distribution_low = a
             self.attitude_distribution_high = b
-        attitudes = np.clip(attitudes, a_min=-np.pi/2, a_max=np.pi/2)
+        attitudes = np.clip(attitudes, a_min=-np.pi / 2, a_max=np.pi / 2)
         self.attitudes = attitudes
         self.attitude_distribution = distribution
         return self
@@ -223,8 +248,7 @@ class NetworkModel:
     def make_symmetric_interactions(self: Self) -> Self:
         """Construct a random symmetric adjacency matrix."""
         rng = np.random.default_rng()
-        rand_mat = rng.random(
-            size=(self.number_of_nodes, self.number_of_nodes))
+        rand_mat = rng.random(size=(self.number_of_nodes, self.number_of_nodes))
         interactions = np.where(rand_mat <= self.connections, 1, 0)
         interactions = np.maximum(interactions, interactions.transpose())
         self.interactions = interactions
@@ -233,8 +257,7 @@ class NetworkModel:
     def make_asymmetric_interactions(self: Self) -> Self:
         """Construct a random asymmetric adjacency matrix."""
         rng = np.random.default_rng()
-        rand_mat = rng.random(
-            size=(self.number_of_nodes, self.number_of_nodes))
+        rand_mat = rng.random(size=(self.number_of_nodes, self.number_of_nodes))
         interactions = np.where(rand_mat <= self.connections, 1, 0)
         self.interactions = interactions
         return self
@@ -255,14 +278,16 @@ class NetworkModel:
         """Construct matrix of differences between node attitudes."""
         self.attitude_diffs = np.subtract(
             self.attitudes,
-            self.attitudes.transpose())
+            self.attitudes.transpose(),
+        )
         return self
 
     def update_connections(self: Self) -> Self:
         """Calculate change in connection strength."""
         d_connections = np.multiply(
             self.interactions,
-            np.sin(self.attitude_diffs))
+            np.sin(self.attitude_diffs),
+        )
         self.connections = self.connections + d_connections
         self.connections = np.clip(self.connections, a_min=0, a_max=1)
         return self
@@ -272,23 +297,31 @@ class NetworkModel:
         connections_to_power = np.where(
             self.connections != 0,
             np.power(self.connections, self.adjacency_exponent),
-            0)
+            0,
+        )
         d_attitudes = np.multiply(
-                np.multiply(connections_to_power, self.interactions),
-                np.sin(self.attitude_diffs)).sum(axis=1)
-        self.attitudes = (self.attitudes
-                          + (self.attitude_change_speed * d_attitudes))
-        self.attitudes = np.clip(self.attitudes, a_min=-np.pi/2, a_max=np.pi/2)
+            np.multiply(connections_to_power, self.interactions),
+            np.sin(self.attitude_diffs),
+        ).sum(axis=1)
+        self.attitudes = self.attitudes + (self.attitude_change_speed * d_attitudes)
+        self.attitudes = np.clip(
+            self.attitudes,
+            a_min=-np.pi / 2,
+            a_max=np.pi / 2,
+        )
         return self
 
     def initialize_summary_table(self: Self) -> Self:
         """Initialize summary table."""
-        self.summary_table = pl.DataFrame(schema={
-            "time": int,
-            "attitude_mean": float,
-            "attitude_sd": float,
-            "connection_mean": float,
-            "connection_sd": float})
+        self.summary_table = pl.DataFrame(
+            schema={
+                "time": int,
+                "attitude_mean": float,
+                "attitude_sd": float,
+                "connection_mean": float,
+                "connection_sd": float,
+            },
+        )
         return self
 
     def update_summary_table(self: Self, time: int) -> Self:
@@ -306,22 +339,23 @@ class NetworkModel:
             An instance of the NetworkModel object.
 
         """
-        step_summary_table = pl.DataFrame({
-            "time": time,
-            "attitude_mean": np.mean(np.sin(self.attitudes)),
-            "attitude_sd": np.std(np.sin(self.attitudes)),
-            "connection_mean": np.mean(self.connections),
-            "connection_sd": np.std(self.connections)})
-        self.summary_table = pl.concat(
-            [self.summary_table, step_summary_table])
+        step_summary_table = pl.DataFrame(
+            {
+                "time": time,
+                "attitude_mean": np.mean(np.sin(self.attitudes)),
+                "attitude_sd": np.std(np.sin(self.attitudes)),
+                "connection_mean": np.mean(self.connections),
+                "connection_sd": np.std(self.connections),
+            },
+        )
+        self.summary_table = pl.concat([self.summary_table, step_summary_table])
         return self
 
     def initialize_attitude_tracker(self: Self) -> Self:
         """Initialize attitude tracking table."""
-        self.attitude_tracker = pl.DataFrame(schema={
-            "time": int,
-            "node": int,
-            "attitude": float})
+        self.attitude_tracker = pl.DataFrame(
+            schema={"time": int, "node": int, "attitude": float},
+        )
         return self
 
     def update_attitude_tracker(self: Self, time: int) -> Self:
@@ -340,15 +374,22 @@ class NetworkModel:
 
         """
         attitudes_flat = self.attitudes.flatten()
-        step_attitude_tracker = pl.DataFrame({
-            "time": np.full(
-                shape=attitudes_flat.shape, fill_value=time, dtype="int64"),
-            "node": np.arange(
-                self.number_of_nodes, dtype="int64").reshape(
-                    attitudes_flat.shape),
-            "attitude": attitudes_flat})
+        step_attitude_tracker = pl.DataFrame(
+            {
+                "time": np.full(
+                    shape=attitudes_flat.shape,
+                    fill_value=time,
+                    dtype="int64",
+                ),
+                "node": np.arange(self.number_of_nodes, dtype="int64").reshape(
+                    attitudes_flat.shape,
+                ),
+                "attitude": attitudes_flat,
+            },
+        )
         self.attitude_tracker = pl.concat(
-            [self.attitude_tracker, step_attitude_tracker])
+            [self.attitude_tracker, step_attitude_tracker],
+        )
         return self
 
     def run_simulation(self: Self, tmax: int) -> Self:
