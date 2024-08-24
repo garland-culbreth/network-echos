@@ -302,7 +302,7 @@ class NetworkModel:
         d_attitudes = np.multiply(
             np.multiply(connections_to_power, self.interactions),
             np.sin(self.attitude_diffs),
-        ).sum(axis=1)
+        ).sum(axis=0)
         self.attitudes = self.attitudes + (self.attitude_change_speed * d_attitudes)
         self.attitudes = np.clip(
             self.attitudes,
