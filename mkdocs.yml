@@ -75,6 +75,7 @@ nav:
   - Home:
     - index.md
   - Concepts:
+    - concepts/overview.md
     - concepts/model.md
     - concepts/notation.md
   - API reference:
