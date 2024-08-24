@@ -14,6 +14,10 @@ plugins:
             show_symbol_type_heading: true
             show_symbol_type_toc: true
             parameter_headings: true
+            docstring_options:
+              ignore_init_summary: true
+            merge_init_into_class: true
+            show_root_toc_entry: false
 
 theme:
   name: material

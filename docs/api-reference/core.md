@@ -1,3 +1,3 @@
 # netechos.core
 
-::: netechos.core.NetworkModel
+::: netechos.core
