@@ -4,7 +4,7 @@
 
 ### Network generation
 
-At initialization, a social network, $\mathcal{G}$, is constructed according to standard network construction algorithms the user can select from.
+The initial social network, network, $\mathcal{G}$, is constructed according to standard network construction algorithms the user can select from.
 
 ??? abstract "Available network constructors"
 
