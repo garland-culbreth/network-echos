@@ -18,6 +18,8 @@ plugins:
               ignore_init_summary: true
             merge_init_into_class: true
             show_root_toc_entry: false
+  - mkdocs-jupyter:
+      ignore_h1_titles: True
 
 theme:
   name: material
@@ -75,10 +77,11 @@ nav:
   - Home:
     - index.md
   - Concepts:
+    - concepts/overview.md
     - concepts/model.md
     - concepts/notation.md
   - API reference:
     - api-reference/core.md
     - api-reference/plot.md
   - User guide:
-    - user-guide/getting-started.md
+    - user-guide/getting-started.ipynb
