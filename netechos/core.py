@@ -1,8 +1,4 @@
-"""Core functionality for the network infodemic model.
-
-Defines the core class and methods for constructing and running an
-instance of the model.
-"""
+"""Core functionality for the network echos model."""
 
 from typing import Literal, Self
 
@@ -18,7 +14,7 @@ class NetworkModel:
     def __init__(
         self: Self,
         number_of_nodes: int,
-        interaction_type: str,
+        interaction_type: Literal["symmetric", "asymmetric"],
         alpha: float = 1,
         beta: float = 1e-3,
     ) -> Self:
@@ -28,7 +24,7 @@ class NetworkModel:
         ----------
         number_of_nodes : int
             Number of nodes to add to the network model.
-        interaction_type : str {"symmetric", "asymmetric"}
+        interaction_type : Literal["symmetric", "asymmetric"]
             Type of interaction between nodes. If "symmetric"
             interactions will be reciprocated. If "asymmetric",
             interactions may be one-directional.
@@ -94,15 +90,15 @@ class NetworkModel:
 
         Parameters
         ----------
-        network_type: str
+        network_type: Literal["complete", "erdos_renyi", "watts_strogatz", "newman_watts_strogatz", "barabasi_albert"]
             Type of network to create.
         p : float, optional, default: 0.1
-            Required if network_type is one of {'erdos_renyi',
-            'watts_strogatz', 'newman_watts_strogatz'}. Probability for
+            Required if network_type is one of 'erdos_renyi',
+            'watts_strogatz', 'newman_watts_strogatz'. Probability for
             edge creation.
         k : int, optional, default: 2
-            Required if network_type is one of {'watts_strogatz',
-            'newman_watts_strogatz'}. Each node is joined with its `k`
+            Required if network_type is one of 'watts_strogatz',
+            'newman_watts_strogatz'. Each node is joined with its `k`
             nearest neighbors in a ring topology.
         m : float, optional, default: 1.0
             Required if network_type is 'barabasi_albert'. Number
@@ -113,7 +109,7 @@ class NetworkModel:
         self : Self@NetworkModel
             An instance of the NetworkModel object.
 
-        """
+        """  # noqa: E501
         if network_type == "complete":
             g_initial = nx.complete_graph(n=self.number_of_nodes)
         if network_type == "erdos_renyi":
@@ -188,7 +184,7 @@ class NetworkModel:
 
         Parameters
         ----------
-        distribution : str {'normal', 'uniform', 'laplace', 'vonmises'}, default: 'vonmises'
+        distribution : Literal['normal', 'uniform', 'laplace', 'vonmises'], default: 'vonmises'
             Type of probability distribution to sample attitudes from.
         a : float, default: 0.0
             First parameter for `distribution`. If `distribution` is
