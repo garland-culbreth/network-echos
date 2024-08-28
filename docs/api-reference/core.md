@@ -1,3 +1,3 @@
 # netechos.core
 
-::: netechos.core
+::: src.netechos.core

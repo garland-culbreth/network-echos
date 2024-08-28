@@ -1,3 +1,3 @@
 # netechos.plot
 
-::: netechos.plot
+::: src.netechos.plot
