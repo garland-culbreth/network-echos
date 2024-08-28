@@ -34,12 +34,7 @@ class NetworkPlot:
         """
         self.summary_table = model.summary_table
         self.attitude_tracker = model.attitude_tracker
-        if theme == "ticks":
-            sns.set_theme(context="notebook", style="ticks")
-        elif theme == "whitegrid":
-            sns.set_theme(context="notebook", style="whitegrid")
-        else:
-            sns.set_theme(context="notebook", style="darkgrid")
+        sns.set_theme(context="notebook", style=theme)
 
     def attitude_and_connection_means(
         self: Self,
