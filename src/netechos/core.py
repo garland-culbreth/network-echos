@@ -52,26 +52,6 @@ class NetworkModel:
         self.interaction_type = interaction_type
         self.adjacency_exponent = alpha
         self.attitude_change_speed = beta
-        self.network_type = None
-        self.k_neighbors = None
-        self.p_edge = None
-        self.m_new_node_edges = None
-        self.neighbor_weight = None
-        self.non_neighbor_weight = None
-        self.social_network = None
-        self.connections = None
-        self.attitudes = None
-        self.attitude_distribution = None
-        self.attitude_distribution_loc = None
-        self.attitude_distribution_scale = None
-        self.attitude_distribution_low = None
-        self.attitude_distribution_high = None
-        self.attitude_distribution_mu = None
-        self.attitude_distribution_kappa = None
-        self.interactions = None
-        self.attitude_diffs = None
-        self.summary_table = None
-        self.attitude_tracker = None
 
     def create_network(
         self: Self,
