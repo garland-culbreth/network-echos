@@ -1,26 +1,30 @@
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "network-echos"
-version = "0.0.1"
+version = "0.1.0"
 authors = [
   {name = "Garland Culbreth", email = "culbreth.garland@gmail.com"}]
 maintainers = [
   {name = "Garland Culbreth", email = "culbreth.garland@gmail.com"}]
 dependencies = [
-  "networkx",
-  "numpy",
-  "polars",
-  "matplotlib",
-  "seaborn",
-  "tqdm",
-  "pytest",
-  "ruff",
-  "mkdocs-material",
-  "mkdocstrings[python]>=0.18",
-  "mkdocs-jupyter"]
+  "numpy>=2.1.0",
+  "networkx>=3.3",
+  "polars>=1.5.0",
+  "matplotlib>=3.9.2",
+  "seaborn>=0.13.2",
+  "tqdm>=4.66.5",
+  "pytest>=8.3.2",
+  "ruff>=0.6.2",
+  "mkdocs-material>=9.5.33",
+  "mkdocstrings[python]>=0.25.2",
+  "mkdocs-jupyter>=0.24.8",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/netechos"]
 
 [tool.ruff.lint]
 select = ["ALL"]
