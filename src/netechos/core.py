@@ -143,10 +143,10 @@ class NetworkModel:
         ----------
         neighbor_weight : float
             The weight to assign to edges between nodes which have an
-            existing edge in the intial network.
+            existing edge in the initial network.
         non_neighbor_weight : float
             The weight to assign to edges between nodes which don't
-            have an existing edge in the intial network. If non-zero
+            have an existing edge in the initial network. If non-zero
             the network will technically become a complete network.
 
         Returns

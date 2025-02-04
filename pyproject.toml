@@ -17,6 +17,7 @@ dependencies = [
   "mkdocstrings[python]>=0.25.2",
   "rich>=13.9.4",
   "pandas>2.2.2",
+  "pre-commit>=4.1.0",
 ]
 
 [build-system]
