@@ -5,7 +5,14 @@ from typing import Literal, Self
 import networkx as nx
 import numpy as np
 import polars as pl
-from tqdm import tqdm
+from rich.progress import (
+    BarColumn,
+    Progress,
+    SpinnerColumn,
+    TextColumn,
+    TimeElapsedColumn,
+    TimeRemainingColumn,
+)
 
 
 class NetworkModel:
@@ -52,6 +59,13 @@ class NetworkModel:
         self.interaction_type = interaction_type
         self.adjacency_exponent = alpha
         self.attitude_change_speed = beta
+        self.progress = Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
+            BarColumn(),
+            TimeRemainingColumn(),
+            TimeElapsedColumn(),
+        )
 
     def create_network(
         self: Self,
@@ -387,10 +401,11 @@ class NetworkModel:
             raise ValueError(msg)
         self.initialize_summary_table()
         self.initialize_attitude_tracker()
-        for t in tqdm(range(tmax)):
-            self.compute_attitude_difference_matrix()
-            self.make_interactions()
-            self.update_connections()
-            self.update_attitudes()
-            self.update_summary_table(time=t)
-            self.update_attitude_tracker(time=t)
+        with self.progress as p:
+            for t in p.track(range(tmax)):
+                self.compute_attitude_difference_matrix()
+                self.make_interactions()
+                self.update_connections()
+                self.update_attitudes()
+                self.update_summary_table(time=t)
+                self.update_attitude_tracker(time=t)
