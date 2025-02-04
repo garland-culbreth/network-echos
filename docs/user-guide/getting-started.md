@@ -25,7 +25,7 @@ With the model object instantiated as `nemodel`, you can use its attached method
 >>> nemodel.create_network(network_type="erdos_renyi", p=0.3)
 ```
 
-Simulations also depend on the individual attitudes of the in the basis network and the connections between them, which you can initalize like so:
+Simulations also depend on the individual attitudes of the in the basis network and the connections between them, which you can initialize like so:
 
 ```py
 >>> nemodel.initialize_connections()
