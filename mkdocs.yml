@@ -10,7 +10,7 @@ plugins:
         python:
           options:
             docstring_style: numpy
-            docstring_section_style: spacey
+            docstring_section_style: spacy
             show_symbol_type_heading: true
             show_symbol_type_toc: true
             parameter_headings: true
