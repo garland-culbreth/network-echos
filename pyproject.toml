@@ -13,11 +13,10 @@ dependencies = [
   "seaborn>=0.13.2",
   "pytest>=8.3.2",
   "ruff>=0.6.2",
-  "mkdocs-material>=9.5.33",
-  "mkdocstrings[python]>=0.25.2",
   "rich>=13.9.4",
   "pandas>2.2.2",
   "pre-commit>=4.1.0",
+  "zensical>=0.0.23",
 ]
 
 [build-system]
